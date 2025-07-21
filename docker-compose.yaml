@@ -54,8 +54,8 @@ services:
     volumes:
 
       - ../VaLibrary-Client/:/var/www/html
-      - /var/www/html/node_modules
-    command: npm run dev -- --host
+      #- /var/www/html/node_modules
+    command: tail -f /dev/null
     networks:
       - valibrary-network
 

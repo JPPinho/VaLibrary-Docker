@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
     nano \
     && apt-get install -y \
     nodejs \
+    npm \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip \
     && docker-php-ext-install opcache \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
