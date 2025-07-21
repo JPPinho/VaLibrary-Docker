@@ -1,0 +1,68 @@
+services:
+  backend:
+    build:
+      context: ../VaLibrary-Client
+      dockerfile: ../VaLibrary-Docker/.docker/php/Dockerfile
+    container_name: valibrary-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ../VaLibrary-Client/:/var/www/html
+    networks:
+      - valibrary-network
+
+  nginx:
+    build:
+      context: ../VaLibrary-Client
+      dockerfile: ../VaLibrary-Docker/.docker/php/Dockerfile
+    container_name: valibrary-web
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ../VaLibrary-Client/:/var/www/html
+    depends_on:
+      - backend
+    networks:
+      - valibrary-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: valibrary-db
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: valibrary
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - valibrary-network
+
+  vite:
+    build:
+      context: ../VaLibrary-Client
+      dockerfile: ../VaLibrary-Docker/.docker/php/Dockerfile
+    container_name: valibrary-vite
+    restart: unless-stopped
+    working_dir: /var/www/html
+    ports:
+      - "5173:5173"
+    volumes:
+
+      - ../VaLibrary-Client/:/var/www/html
+      - /var/www/html/node_modules
+    command: npm run dev -- --host
+    networks:
+      - valibrary-network
+
+networks:
+  valibrary-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
