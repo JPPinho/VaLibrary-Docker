@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y \
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+RUN echo 'alias art="php artisan"' >> ~/.bashrc
 EXPOSE 9000
 
 CMD ["php-fpm"]

@@ -13,8 +13,8 @@ services:
 
   nginx:
     build:
-      context: ../VaLibrary-Client
-      dockerfile: ../VaLibrary-Docker/.docker/php/Dockerfile
+      context: .
+      dockerfile: ../VaLibrary-Docker/.docker/nginx/Dockerfile
     container_name: valibrary-web
     restart: unless-stopped
     ports:
@@ -55,7 +55,7 @@ services:
 
       - ../VaLibrary-Client/:/var/www/html
       #- /var/www/html/node_modules
-    command: tail -f /dev/null
+    command: npm run dev -- --host
     networks:
       - valibrary-network
 
