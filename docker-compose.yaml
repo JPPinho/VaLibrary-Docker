@@ -3,9 +3,13 @@ services:
     build:
       context: ../VaLibrary-Client
       dockerfile: ../VaLibrary-Docker/.docker/php/Dockerfile
+      args:
+        - UID=1000
+        - GID=1000
     container_name: valibrary-app
     restart: unless-stopped
     working_dir: /var/www/html
+    user: "1000:1000"
     volumes:
       - ../VaLibrary-Client/:/var/www/html
     networks:
