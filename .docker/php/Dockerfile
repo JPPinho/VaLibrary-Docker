@@ -30,6 +30,7 @@ RUN groupadd -g ${GID} --non-unique laravel && \
 USER laravel
 
 RUN echo 'alias art="php artisan"' >> ~/.bashrc
+RUN echo 'alias freshseed="php artisan mig:fresh --seed"' >> ~/.bashrc
 
 WORKDIR /var/www/html
 

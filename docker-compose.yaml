@@ -23,8 +23,11 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ../VaLibrary-Client/:/var/www/html
+      - ./.docker/nginx/conf.d:/etc/nginx/conf.d
+      - ./.docker/nginx/certs:/etc/nginx/certs
     depends_on:
       - backend
     networks:
@@ -53,15 +56,36 @@ services:
     container_name: valibrary-vite
     restart: unless-stopped
     working_dir: /var/www/html
+    #env_file:
+    #  - ../VaLibrary-Client/.env
+    environment:
+      - APP_URL=${APP_URL}
+    user: "1000:1000"
     ports:
       - "5173:5173"
     volumes:
-
       - ../VaLibrary-Client/:/var/www/html
+      - ./scripts/vite-entrypoint.sh:/usr/local/bin/vite-entrypoint.sh
+      - ./.docker/nginx/certs:/etc/nginx/certs
       #- /var/www/html/node_modules
     command: npm run dev -- --host
+    #command: tail -f /dev/null
     networks:
       - valibrary-network
+  mqtt:
+    image: eclipse-mosquitto:2
+    container_name: valibrary-mqtt
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ../VaLibrary-MQTT/mosquitto/config:/mosquitto/config
+      - ../VaLibrary-MQTT/mosquitto/data:/mosquitto/data
+      - ../VaLibrary-MQTT/mosquitto/log:/mosquitto/log
+    networks:
+      - valibrary-network
+
 
 networks:
   valibrary-network:
